@@ -37,6 +37,10 @@ export class ItinerariesRepository {
     return this.itineraries.findOneBy({ itineraryId });
   }
 
+  findOne(itineraryId: number): Promise<Itinerary | null> {
+    return this.itineraries.findOne({ where: { itineraryId } });
+  }
+
   create(
     userId: number,
     itineraryData: CreateItineraryDto,

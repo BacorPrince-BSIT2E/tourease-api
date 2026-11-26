@@ -4,13 +4,22 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
 
 // Formats every HTTP error into the TourEase API error response.
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(HttpExceptionFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost): void {
+    if (!(exception instanceof HttpException)) {
+      const error =
+        exception instanceof Error ? exception : new Error(String(exception));
+      this.logger.error(error.message, error.stack);
+    }
+
     const response = host.switchToHttp().getResponse<Response>();
     const statusCode =
       exception instanceof HttpException
@@ -31,12 +40,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
       'message' in exceptionResponse
     ) {
       const exceptionMessage = exceptionResponse.message;
+      const exceptionErrors =
+        'errors' in exceptionResponse && Array.isArray(exceptionResponse.errors)
+          ? exceptionResponse.errors.map(String)
+          : undefined;
+
       if (Array.isArray(exceptionMessage)) {
-        errors = exceptionMessage.map(String);
+        errors = exceptionErrors ?? exceptionMessage.map(String);
         message = errors[0] ?? 'Request failed';
       } else if (typeof exceptionMessage === 'string') {
         message = exceptionMessage;
-        errors = [message];
+        errors = exceptionErrors ?? [message];
       }
     } else if (exception instanceof HttpException) {
       message = exception.message;

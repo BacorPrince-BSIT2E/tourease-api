@@ -40,7 +40,11 @@ export class ItinerariesService {
     dto: CreateItineraryDto,
   ): Promise<ItineraryResponse> {
     this.validateDateRange(dto.startDate, dto.endDate);
-    const itinerary = await this.itineraries.create(userId, dto);
+    const saved = await this.itineraries.create(userId, dto);
+    const itinerary = await this.itineraries.findOne(saved.itineraryId);
+    if (!itinerary) {
+      throw new NotFoundException('Itinerary not found.');
+    }
     return this.toResponse(itinerary);
   }
 
@@ -62,7 +66,12 @@ export class ItinerariesService {
       dto.endDate ?? itinerary.endDate,
     );
     Object.assign(itinerary, dto);
-    return this.toResponse(await this.itineraries.save(itinerary));
+    await this.itineraries.save(itinerary);
+    const reloaded = await this.itineraries.findOne(itineraryId);
+    if (!reloaded) {
+      throw new NotFoundException('Itinerary not found.');
+    }
+    return this.toResponse(reloaded);
   }
 
   async remove(itineraryId: number, requester: JwtPayload): Promise<void> {
@@ -98,10 +107,22 @@ export class ItinerariesService {
     return itinerary;
   }
 
-  private validateDateRange(startDate: string, endDate: string): void {
-    if (endDate < startDate) {
-      throw new BadRequestException('endDate must be on or after startDate.');
+  private validateDateRange(
+    startDate: string | Date,
+    endDate: string | Date,
+  ): void {
+    if (this.normalizeDate(endDate) < this.normalizeDate(startDate)) {
+      throw new BadRequestException({
+        message: 'Validation failed.',
+        errors: ['endDate must be on or after startDate.'],
+      });
     }
+  }
+
+  private normalizeDate(value: string | Date): string {
+    return value instanceof Date
+      ? value.toISOString().slice(0, 10)
+      : value.slice(0, 10);
   }
 
   private toResponse(itinerary: Itinerary): ItineraryResponse {
@@ -115,7 +136,10 @@ export class ItinerariesService {
     };
   }
 
-  private formatDate(value: string | Date): string {
+  private formatDate(value: string | Date | null | undefined): string | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
     return value instanceof Date
       ? value.toISOString().slice(0, 10)
       : value.slice(0, 10);
@@ -124,10 +148,8 @@ export class ItinerariesService {
 
 type ItineraryResponse = Pick<
   Itinerary,
-  | 'itineraryId'
-  | 'userId'
-  | 'itineraryName'
-  | 'startDate'
-  | 'endDate'
-  | 'dateCreated'
->;
+  'itineraryId' | 'userId' | 'itineraryName' | 'dateCreated'
+> & {
+  startDate: string | null;
+  endDate: string | null;
+};

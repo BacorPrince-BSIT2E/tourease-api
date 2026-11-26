@@ -52,7 +52,14 @@ export class ItineraryDestinationsService {
     }
 
     try {
-      const entry = await this.itineraryDestinations.create(itineraryId, dto);
+      const saved = await this.itineraryDestinations.create(itineraryId, dto);
+      const entry = await this.itineraryDestinations.findByIdInItinerary(
+        saved.itineraryDestinationId,
+        itineraryId,
+      );
+      if (!entry) {
+        throw new NotFoundException('Itinerary destination not found.');
+      }
       return this.toResponse(entry);
     } catch (error) {
       if (this.isDuplicateEntry(error)) {
@@ -87,7 +94,15 @@ export class ItineraryDestinationsService {
 
     Object.assign(entry, dto);
     try {
-      return this.toResponse(await this.itineraryDestinations.save(entry));
+      await this.itineraryDestinations.save(entry);
+      const reloaded = await this.itineraryDestinations.findByIdInItinerary(
+        entry.itineraryDestinationId,
+        itineraryId,
+      );
+      if (!reloaded) {
+        throw new NotFoundException('Itinerary destination not found.');
+      }
+      return this.toResponse(reloaded);
     } catch (error) {
       if (this.isDuplicateEntry(error)) {
         throw new ConflictException('Visit order is already used.');
@@ -130,7 +145,12 @@ export class ItineraryDestinationsService {
     };
   }
 
-  private formatDate(value: string | Date): string {
+  private formatDate(
+    value: string | Date | null | undefined,
+  ): string | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
     return value instanceof Date
       ? value.toISOString().slice(0, 10)
       : value.slice(0, 10);
