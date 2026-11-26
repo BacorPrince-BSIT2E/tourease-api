@@ -1,132 +1,140 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# TourEase API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+TourEase is a REST API for a tourism system. It supports account registration and JWT authentication, destination discovery, tour guides, accommodations, and user-owned travel itineraries with ordered destination stops.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tech stack
 
-## Description
+- NestJS and TypeScript
+- TypeORM with MySQL (`mysql2`)
+- JWT Bearer authentication and role-based access
+- `class-validator` and `class-transformer` for request validation
+- `bcrypt` for password hashing
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- Tourist, Staff, Guide, and Admin user roles
+- Public destination, tour guide, and accommodation browsing
+- Staff/Admin catalog management and Admin-only deletion
+- Paginated and filtered catalog endpoints
+- User-owned itineraries and nested stops with visit-order uniqueness
+- Consistent JSON errors and a Postman collection for API testing
 
-```bash
-$ npm install
-```
+## Setup
 
-## Compile and run the project
+1. Install Node.js and XAMPP, then start MySQL from the XAMPP Control Panel.
+2. In phpMyAdmin, create the project database, or run:
 
-```bash
-# development
-$ npm run start
+   ```sql
+   CREATE DATABASE tourease_db
+     CHARACTER SET utf8mb4
+     COLLATE utf8mb4_unicode_ci;
+   ```
 
-# watch mode
-$ npm run start:dev
+3. Install dependencies:
 
-# production mode
-$ npm run start:prod
-```
+   ```bash
+   npm install
+   ```
 
-## Run tests
+4. Create `.env` from `.env.example` (`Copy-Item .env.example .env` in PowerShell) and set values for your local MySQL setup. `.env` is ignored by Git; do not commit real credentials.
 
-```bash
-# unit tests
-$ npm run test
+### Environment variables
 
-# e2e tests
-$ npm run test:e2e
+| Variable | Purpose | Example placeholder |
+| --- | --- | --- |
+| `DB_HOST` | MySQL host | `localhost` |
+| `DB_PORT` | MySQL port | `3306` |
+| `DB_USERNAME` | MySQL user | `root` |
+| `DB_PASSWORD` | MySQL password | Empty for a default local XAMPP install |
+| `DB_NAME` | Database name | `tourease_db` |
+| `JWT_SECRET` | Secret used to sign access tokens | Replace the example value with a long random secret |
+| `JWT_EXPIRES_IN` | Access-token lifetime | `1d` |
 
-# test coverage
-$ npm run test:cov
-```
+## Run and seed
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Start the API in development mode:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Observability
-
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
-
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
-
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
-
-To add it to this project, run this and approve the code it prints at [observe.nestjs.com/link](https://observe.nestjs.com/link) - signing up for free if you have no account:
+TypeORM synchronizes the entities when the app starts. Once the database connection succeeds, seed the demo data in another terminal:
 
 ```bash
-$ npx @nestjs/observe link
+npm run seed
 ```
 
-It installs `@nestjs/observe`, wires it into `AppModule` and `main.ts`, and writes the app key and secret into `.env`, which every `nest start` script (`start`, `start:dev`, `start:debug`) then loads. In production, set `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment instead.
+The seed command is safe to repeat: it skips matching users/guides by email and destinations, accommodations, and itinerary records by name. It prints counts of newly created rows.
 
-Or do it by hand:
+### Demo accounts
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@tourease.test` | `Admin123!` |
+| Staff | `staff@tourease.test` | `Staff123!` |
+| Tourist | `tourist@tourease.test` | `Tourist123!` |
+
+These are local demo credentials only. Do not use them in a deployed environment.
+
+## API endpoints
+
+All routes below are prefixed with `/api/v1`. Protected routes require `Authorization: Bearer <token>`. The login endpoint returns an access token; role and ownership requirements are included in the access column.
+
+| Method | Path | Access | Success |
+| --- | --- | --- | --- |
+| POST | `/auth/login` | Public | 200 |
+| POST | `/users` | Public | 201 |
+| GET | `/users/:id` | Owner or Admin | 200 |
+| PATCH | `/users/:id` | Owner or Admin | 200 |
+| DELETE | `/users/:id` | Admin | 204 |
+| GET | `/destinations` | Public | 200 |
+| GET | `/destinations/:id` | Public | 200 |
+| POST | `/destinations` | Staff or Admin | 201 |
+| PUT | `/destinations/:id` | Staff or Admin | 200 |
+| PATCH | `/destinations/:id` | Staff or Admin | 200 |
+| DELETE | `/destinations/:id` | Admin | 204 |
+| GET | `/tour-guides` | Public | 200 |
+| GET | `/tour-guides/:id` | Public | 200 |
+| POST | `/tour-guides` | Staff or Admin | 201 |
+| PATCH | `/tour-guides/:id` | Staff or Admin | 200 |
+| DELETE | `/tour-guides/:id` | Admin | 204 |
+| GET | `/accommodations` | Public | 200 |
+| GET | `/accommodations/:id` | Public | 200 |
+| POST | `/accommodations` | Staff or Admin | 201 |
+| PATCH | `/accommodations/:id` | Staff or Admin | 200 |
+| DELETE | `/accommodations/:id` | Admin | 204 |
+| GET | `/itineraries` | Authenticated user; own itineraries | 200 |
+| GET | `/itineraries/:id` | Owner or Admin | 200 |
+| POST | `/itineraries` | Authenticated user; creates own itinerary | 201 |
+| PATCH | `/itineraries/:id` | Owner | 200 |
+| DELETE | `/itineraries/:id` | Owner or Admin | 204 |
+| GET | `/itineraries/:id/destinations` | Itinerary owner or Admin | 200 |
+| POST | `/itineraries/:id/destinations` | Itinerary owner | 201 |
+| PATCH | `/itineraries/:id/destinations/:entryId` | Itinerary owner | 200 |
+| DELETE | `/itineraries/:id/destinations/:entryId` | Itinerary owner | 204 |
+
+### Error response
+
+Errors use this JSON shape. `statusCode` reflects the HTTP response status, `message` is a short description, `errors` contains one or more details, and `timestamp` is an ISO 8601 date-time.
+
+```json
+{
+  "success": false,
+  "statusCode": 404,
+  "message": "Destination not found.",
+  "errors": ["Destination not found."],
+  "timestamp": "2026-01-15T12:00:00.000Z"
+}
+```
+
+## Postman
+
+Import [`postman/TourEase.postman_collection.json`](postman/TourEase.postman_collection.json) into Postman. The collection includes public and protected requests, example bodies, status checks, and a login test that stores the access token in the `token` collection variable.
+
+## Tests and build
 
 ```bash
-$ npm install @nestjs/observe
+npm run build
+npm test
+npm run test:e2e
 ```
-
-Then follow the [setup guide](https://docs.nestjs.com/observability/sdk) - it takes a single import and an app key.
-
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
