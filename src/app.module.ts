@@ -8,6 +8,7 @@ import { AccommodationsModule } from './accommodations/accommodations.module';
 import { AuthModule } from './auth/auth.module';
 import { HttpExceptionFilter } from './common/http-exception.filter';
 import { DestinationsModule } from './destinations/destinations.module';
+import { ItinerariesModule } from './itineraries/itineraries.module';
 import { TourGuidesModule } from './tour-guides/tour-guides.module';
 import { UsersModule } from './users/users.module';
 
@@ -33,6 +34,7 @@ import { UsersModule } from './users/users.module';
     DestinationsModule,
     TourGuidesModule,
     AccommodationsModule,
+    ItinerariesModule,
   ],
   controllers: [AppController],
   providers: [
