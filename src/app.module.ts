@@ -16,7 +16,7 @@ import { AppService } from './app.service';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        autoLoadEntities: true,
+        entities: [__dirname + '/entities/*.entity{.ts,.js}'],
         synchronize: true,
       }),
     }),
