@@ -4,8 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AccommodationsModule } from './accommodations/accommodations.module';
 import { AuthModule } from './auth/auth.module';
 import { HttpExceptionFilter } from './common/http-exception.filter';
+import { DestinationsModule } from './destinations/destinations.module';
+import { TourGuidesModule } from './tour-guides/tour-guides.module';
 import { UsersModule } from './users/users.module';
 
 // Configures database access and registers the application feature modules.
@@ -27,6 +30,9 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     UsersModule,
+    DestinationsModule,
+    TourGuidesModule,
+    AccommodationsModule,
   ],
   controllers: [AppController],
   providers: [
