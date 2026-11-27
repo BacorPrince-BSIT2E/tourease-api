@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     <script src="/js/api.js" defer></script>
     <script src="/js/app.js" defer></script>
+    <script src="/js/hero.js" defer></script>
   </head>
   <body>
     <div id="toast-region" class="toast-region" aria-live="polite"></div>
@@ -25,6 +26,8 @@
 
     <main>
       <section id="home" class="hero">
+        <div class="hero-slide" aria-hidden="true"></div>
+        <div class="hero-slide" aria-hidden="true"></div>
         <div class="hero-content">
           <p class="eyebrow">Your next story starts here</p>
           <h1>Discover Tagaytay and Beyond</h1>
@@ -37,6 +40,13 @@
           </form>
         </div>
         <div class="hero-decoration" aria-hidden="true"><span>🌅</span><span>🌴</span></div>
+        <div class="hero-dots" role="group" aria-label="Choose a hero photo">
+          <button class="hero-dot" type="button" aria-label="Show photo: Ferris wheel at Sky Ranch" aria-pressed="false"></button>
+          <button class="hero-dot" type="button" aria-label="Show photo: viewpoint over Taal Lake" aria-pressed="false"></button>
+          <button class="hero-dot" type="button" aria-label="Show photo: Tagaytay City sign" aria-pressed="false"></button>
+          <button class="hero-dot" type="button" aria-label="Show photo: Tagaytay Highlands chalets and golf course" aria-pressed="false"></button>
+          <button class="hero-dot" type="button" aria-label="Show photo: I love Tagaytay signpost" aria-pressed="false"></button>
+        </div>
       </section>
 
       <section id="destinations" class="content-section">
@@ -104,7 +114,10 @@
       </section>
     </main>
 
-    <footer>TourEase – ITEC 116 Final Project</footer>
+    <footer>
+      <span>TourEase – ITEC 116 Final Project</span>
+      <p class="photo-credits">Background photos: Tagaytay City, Cavite<!-- Add photographer names or source links here. --></p>
+    </footer>
 
     <dialog id="auth-dialog" class="dialog-card">
       <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
