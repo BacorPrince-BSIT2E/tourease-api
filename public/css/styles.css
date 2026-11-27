@@ -132,10 +132,6 @@ footer { padding: 25px; background: #143f40; color: #eaf5ee; text-align: center;
 .dialog-list article { padding: 13px; border-radius: 10px; background: var(--soft); }
 .dialog-list h4 { margin: 0 0 5px; font: 700 .95rem Manrope,sans-serif; }
 .dialog-list p { margin: 0; color: var(--muted); font-size: .84rem; line-height: 1.45; }
-.auth-switch { margin: 18px 0 0; color: var(--muted); font-size: .9rem; }
-.auth-switch button { padding: 0; border: 0; background: none; color: var(--teal); cursor: pointer; font-weight: 700; }
-.auth-form { display: grid; gap: 14px; }
-.auth-form h2 { margin-bottom: 2px; }
 .trip-stop-form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; align-items: end; gap: 10px; margin-top: 18px; }
 
 @media (max-width: 800px) {

@@ -86,8 +86,13 @@ Files:
 
 - `public/index.html` — page structure and forms
 - `public/css/styles.css` — responsive layout and styling
+- `public/login.html` and `public/register.html` — standalone login and registration pages
+- `public/css/auth.css` — shared authentication page styles
+- `public/js/auth.js` — authentication form validation, submission, and redirects
 - `public/js/api.js` — API requests, token storage, and 401 handling
 - `public/js/app.js` — page interactions and rendering
+- `public/js/hero.js` — Tagaytay hero photo slideshow
+- `public/images/tagaytay-1.jpg` through `tagaytay-5.jpg` — hero and authentication page photos
 
 ## API endpoints
 

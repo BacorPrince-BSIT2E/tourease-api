@@ -82,6 +82,14 @@
     return button;
   }
 
+  // Create a link for navigation to the standalone authentication pages.
+  function createLink(label, className, href) {
+    const link = element("a", className, label);
+    link.href = href;
+    return link;
+  }
+
+  // Render the logged-in controls and the correct access prompt for team tools.
   function renderAuthNav() {
     const nav = byId("auth-nav");
     nav.replaceChildren();
@@ -89,11 +97,13 @@
       nav.append(element("span", "role-pill", state.session.role));
       nav.append(createButton("Logout", "button button-outline button-small", "logout"));
     } else {
-      nav.append(createButton("Log in", "button button-outline button-small", "login"));
-      nav.append(createButton("Register", "button button-primary button-small", "register"));
+      nav.append(createLink("Log in", "button button-outline button-small", "/login.html"));
+      nav.append(createLink("Register", "button button-primary button-small", "/register.html"));
     }
     const canManage = state.session && ["Staff", "Admin"].includes(state.session.role);
-    byId("manage").hidden = !canManage;
+    byId("manage").hidden = Boolean(state.session) && !canManage;
+    byId("manage-auth-prompt").hidden = Boolean(state.session);
+    byId("create-destination-form").hidden = !canManage;
     loadDestinations();
     loadTrips();
   }
@@ -210,51 +220,6 @@
     }
   }
 
-  function showAuth(mode = "login") {
-    const dialog = byId("auth-dialog");
-    const content = byId("auth-dialog-content");
-    content.replaceChildren();
-    const form = element("form", "auth-form");
-    form.append(element("h2", "", mode === "register" ? "Create your account" : "Welcome back"));
-    if (mode === "register") addField(form, "Full name", "fullName", "text", { required: true, maxLength: 100 });
-    addField(form, "Email", "email", "email", { required: true, autocomplete: "email" });
-    addField(form, "Password", "password", "password", {
-      required: true,
-      minLength: 8,
-      autocomplete: mode === "register" ? "new-password" : "current-password",
-    });
-    const submit = element("button", "button button-primary", mode === "register" ? "Create account" : "Log in");
-    submit.type = "submit";
-    form.append(submit);
-    const switchLine = element("p", "auth-switch");
-    switchLine.append(document.createTextNode(mode === "register" ? "Already have an account? " : "New to TourEase? "));
-    const switchButton = element("button", "", mode === "register" ? "Log in" : "Register");
-    switchButton.type = "button";
-    switchButton.addEventListener("click", () => showAuth(mode === "register" ? "login" : "register"));
-    switchLine.append(switchButton);
-    form.append(switchLine);
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      perform(async () => {
-        const values = Object.fromEntries(new FormData(form).entries());
-        if (mode === "register") {
-          await api.register(values);
-          showToast("Account created. You can now log in.");
-          showAuth("login");
-          return;
-        }
-        const response = await api.login(values);
-        api.saveToken(response.accessToken);
-        state.session = readSession();
-        dialog.close();
-        renderAuthNav();
-        showToast(`Welcome to TourEase${state.session ? `, ${state.session.role}` : ""}!`);
-      });
-    });
-    content.append(form);
-    dialog.showModal();
-  }
-
   function addField(parent, labelText, name, type, options = {}) {
     const label = element("label", "", labelText);
     const input = element("input");
@@ -352,7 +317,7 @@
 
   function showAddToTrip(destinationId) {
     if (!state.session) {
-      showAuth("login");
+      window.location.assign("/login.html?redirect=index.html%23trips");
       return;
     }
     const dialog = byId("trip-dialog");
@@ -409,7 +374,10 @@
 
   function renderTripsPrompt(container, text, withLogin) {
     const panel = element("div", "empty-state", text);
-    if (withLogin) panel.append(createButton("Log in to view trips", "button button-primary", "login"));
+    if (withLogin) {
+      panel.append(document.createTextNode(" "));
+      panel.append(createLink("Log in to view trips", "button button-primary button-small", "/login.html?redirect=index.html%23trips"));
+    }
     container.replaceChildren(panel);
   }
 
@@ -610,12 +578,11 @@
     document.addEventListener("click", (event) => {
       const close = event.target.closest("[data-close]");
       if (close) close.closest("dialog").close();
+      if (event.target.closest("#main-nav a")) byId("main-nav").classList.remove("open");
       const trigger = event.target.closest("[data-action]");
       if (!trigger) return;
       const { action, id } = trigger.dataset;
-      if (action === "login") showAuth("login");
-      else if (action === "register") showAuth("register");
-      else if (action === "logout") {
+      if (action === "logout") {
         api.clearToken();
         state.session = null;
         state.selectedItineraryId = null;
@@ -652,9 +619,7 @@
     window.addEventListener("tourease:unauthorized", () => {
       state.session = null;
       state.selectedItineraryId = null;
-      renderAuthNav();
-      showToast("Your session expired. Please log in again.");
-      showAuth("login");
+      window.location.assign("/login.html?redirect=index.html");
     });
   }
 
