@@ -76,6 +76,19 @@ The seed command is safe to repeat: it skips matching users/guides by email and 
 
 These are local demo credentials only. Do not use them in a deployed environment.
 
+## Frontend
+
+The plain HTML, CSS, and vanilla JavaScript frontend is served by NestJS alongside the API.
+Start the application with `npm run start:dev`, then open [http://localhost:3000](http://localhost:3000).
+The frontend uses the same demo accounts listed above and calls the API at `/api/v1`.
+
+Files:
+
+- `public/index.html` — page structure and forms
+- `public/css/styles.css` — responsive layout and styling
+- `public/js/api.js` — API requests, token storage, and 401 handling
+- `public/js/app.js` — page interactions and rendering
+
 ## API endpoints
 
 All routes below are prefixed with `/api/v1`. Protected routes require `Authorization: Bearer <token>`. The login endpoint returns an access token; role and ownership requirements are included in the access column.

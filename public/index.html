@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#126b68">
+    <title>TourEase | Discover your next escape</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/api.js" defer></script>
+    <script src="/js/app.js" defer></script>
+  </head>
+  <body>
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="TourEase home"><span aria-hidden="true">✈️</span> TourEase</a>
+      <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Toggle navigation">☰</button>
+      <nav id="main-nav" class="main-nav" aria-label="Main navigation">
+        <a href="#destinations">Destinations</a>
+        <a href="#guides">Tour Guides</a>
+        <a href="#stays">Stays</a>
+        <a href="#trips">My Trips</a>
+        <span id="auth-nav" class="auth-nav"></span>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Your next story starts here</p>
+          <h1>Discover Tagaytay and Beyond</h1>
+          <p class="hero-copy">Plan your trip, find guides and stays, all in one place.</p>
+          <form id="hero-search" class="search-bar">
+            <label class="sr-only" for="destination-search">Search destinations</label>
+            <span aria-hidden="true">⌕</span>
+            <input id="destination-search" name="q" placeholder="Where would you like to go?" autocomplete="off">
+            <button class="button button-dark" type="submit">Explore</button>
+          </form>
+        </div>
+        <div class="hero-decoration" aria-hidden="true"><span>🌅</span><span>🌴</span></div>
+      </section>
+
+      <section id="destinations" class="content-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">Find your place</p><h2>Explore destinations</h2></div>
+          <p>From cool mountain air to seaside sunsets.</p>
+        </div>
+        <form id="destination-filters" class="filter-bar">
+          <label>Search <input name="q" placeholder="Try Tagaytay"></label>
+          <label>Max entrance fee <input name="maxFee" type="number" min="0" step="0.01" placeholder="Any"></label>
+          <label>Sort by
+            <select name="sort"><option value="">Recommended</option><option value="destinationName">Name</option><option value="entranceFee">Entrance fee</option></select>
+          </label>
+          <button class="button button-outline" type="submit">Apply filters</button>
+        </form>
+        <div id="destination-results" class="card-grid" aria-live="polite"></div>
+        <div id="destination-pages" class="pagination"></div>
+      </section>
+
+      <section id="guides" class="content-section section-soft">
+        <div class="section-heading">
+          <div><p class="eyebrow">Local knowledge</p><h2>Meet our tour guides</h2></div>
+          <p>Make every stop more memorable.</p>
+        </div>
+        <form id="guide-filters" class="filter-bar">
+          <label>Specialization <input name="specialization" placeholder="Nature, history…"></label>
+          <button class="button button-outline" type="submit">Find guides</button>
+        </form>
+        <div id="guide-results" class="card-grid compact-grid" aria-live="polite"></div>
+        <div id="guide-pages" class="pagination"></div>
+      </section>
+
+      <section id="stays" class="content-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">Rest easy</p><h2>Places to stay</h2></div>
+          <p>Find a comfortable home base for your trip.</p>
+        </div>
+        <form id="stay-filters" class="filter-bar">
+          <label>Maximum price per night <input name="maxPrice" type="number" min="0" step="0.01" placeholder="Any"></label>
+          <button class="button button-outline" type="submit">Find stays</button>
+        </form>
+        <div id="stay-results" class="card-grid compact-grid" aria-live="polite"></div>
+        <div id="stay-pages" class="pagination"></div>
+      </section>
+
+      <section id="trips" class="content-section section-soft">
+        <div class="section-heading">
+          <div><p class="eyebrow">Make it yours</p><h2>My trips</h2></div>
+          <p>Bring your favorite places together in one plan.</p>
+        </div>
+        <div id="trips-content"></div>
+      </section>
+
+      <section id="manage" class="content-section manage-section" hidden>
+        <div class="section-heading"><div><p class="eyebrow">Team tools</p><h2>Manage destinations</h2></div></div>
+        <form id="create-destination-form" class="form-grid">
+          <label>Destination name<input name="destinationName" required maxlength="150"></label>
+          <label>Address<input name="address" required maxlength="255"></label>
+          <label class="span-two">Description<textarea name="description" rows="3" required></textarea></label>
+          <label>Latitude<input name="latitude" type="number" min="-90" max="90" step="any" required></label>
+          <label>Longitude<input name="longitude" type="number" min="-180" max="180" step="any" required></label>
+          <label>Entrance fee (PHP)<input name="entranceFee" type="number" min="0" step="0.01" value="0" required></label>
+          <div class="span-two"><button class="button button-primary" type="submit">Add destination</button></div>
+        </form>
+      </section>
+    </main>
+
+    <footer>TourEase – ITEC 116 Final Project</footer>
+
+    <dialog id="auth-dialog" class="dialog-card">
+      <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
+      <div id="auth-dialog-content"></div>
+    </dialog>
+    <dialog id="detail-dialog" class="dialog-card wide-dialog">
+      <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
+      <div id="detail-dialog-content"></div>
+    </dialog>
+    <dialog id="trip-dialog" class="dialog-card wide-dialog">
+      <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
+      <div id="trip-dialog-content"></div>
+    </dialog>
+  </body>
+</html>
